@@ -17,7 +17,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/">
+    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/2019/01/17/1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/cynineblog/css/bootstrap.min.css">
@@ -206,7 +206,7 @@
 <p>在本教程中，如果你选择接受它，那么你的任务就是使用 GCD 来优化应用程序，并确保可以安全地从不同线程调用代码。</p>
 <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>下载<a href="https://koenig-media.raywenderlich.com/uploads/2018/08/GooglyPuff_Swift4_Materials_Part1-1.zip" target="_blank" rel="noopener">本教程项目</a>。在 Xcode 中打开它并运行它，看看需要处理什么。</p>
 <p>主屏幕最初是空的。点击 <strong>+</strong>，然后选择 <strong>Le Internet</strong> 从 Internet 上下载预定义的图像。点击第一张图片，你会看到瞪视的眼睛添加到脸上。</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/assets/15477178862857.png" alt="-c"></p>
+<p><img src="/cynineblog/2019/01/17/1/assets/15477178862857.png" alt="-c"></p>
 <p>在本教程中，你将主要使用四个类:</p>
 <ul>
 <li><code>PhotoCollectionViewController</code>: 初始视图控制器。它以缩略图的形式显示选中的照片。</li>
@@ -219,7 +219,7 @@
 <h2 id="GCD-概念"><a href="#GCD-概念" class="headerlink" title="GCD 概念"></a>GCD 概念</h2><p>要理解 GCD，你需要熟悉与并发和线程相关的几个概念。</p>
 <h3 id="Concurrency-并发性"><a href="#Concurrency-并发性" class="headerlink" title="Concurrency 并发性"></a>Concurrency 并发性</h3><p>在 iOS 中，进程或应用程序由一个或多个线程组成。操作系统调度程序独立地管理线程。每个线程都可以并发执行，但是这取决于系统来决定是否发生，何时发生，以及如何发生。</p>
 <p>单核设备通过一种称为<strong>时间分割</strong>的方法实现并发。它们运行一个线程，执行一个上下文切换，然后运行另一个线程。</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476463854350.png" alt=""></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476463854350.png" alt=""></p>
 <p>另一方面，多核设备通过并行性同时执行多个线程。</p>
 <p>GCD 构建在线程之上。在底层，它管理一个共享线程池。使用 GCD，你可以添加代码块或工作项来<strong>dispatch queues</strong>，GCD 决定在哪个线程上执行它们。</p>
 <p>在构建代码时，你将发现可以同时运行的代码块，以及不应该同时运行的代码块。这样就可以使用GCD来利用并发执行。</p>
@@ -228,11 +228,11 @@
 <h2 id="Queues-队列"><a href="#Queues-队列" class="headerlink" title="Queues 队列"></a>Queues 队列</h2><p>如上所述，GCD 通过一个名为 <code>DispatchQueue</code> 的类对调度队列进行操作。你向这个队列提交工作单元，GCD将按照 FIFO 顺序(先入先出)执行它们，确保提交的第一个任务是第一个启动的任务。</p>
 <p>Dispatch queues 是<strong>线程安全</strong>的，这意味着你可以同时从多个线程访问它们。当你了解分派队列如何为你自己的代码部分提供线程安全时，GCD 的好处就显而易见了。关键是选择正确的调度队列类型和正确的调度函数，将你的工作提交到队列中。</p>
 <p>队列可以是 <strong>串行(serial)</strong> 的，也可以是 <strong>并发(concurrent)</strong> 的。串行队列保证在任何给定时间只运行一个任务。GCD 控制执行时间。你不会知道从一个任务结束到下一个任务开始之间的时间:</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476467969089.png" alt=""></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476467969089.png" alt=""></p>
 <p>并发队列允许多个任务同时运行。队列保证任务按照添加的顺序启动。任务可以按任意顺序完成，你不知道下一个任务启动所需的时间，也不知道在任何给定时间运行的任务的数量。</p>
 <p>这是设计上的:你的代码不应该依赖于这些实现细节。</p>
 <p>参见下面的示例任务执行:</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476469119938.png" alt=""></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476469119938.png" alt=""></p>
 <p>注意任务1、任务2和任务3是如何一个接一个快速启动的。另一方面，Task 1 在 Task 0 之后需要一段时间才能启动。还要注意，虽然 Task 3 在 Task 2 之后启动，但它首先完成。</p>
 <p>何时开始一项任务完全取决于 GCD。如果一个任务的执行时间与另一个任务的执行时间重叠，则由 GCD 决定是应该在不同的核心上运行，还是在可用的核心上运行，或者执行上下文切换来运行不同的任务。</p>
 <p>GCD 提供三种主要类型的队列:</p>
@@ -270,7 +270,7 @@
 </ol>
 <p>在两个点中，添加 <code>[weak self]</code> 以捕获每个闭包中对 <code>self</code> 的弱引用。如果你不熟悉捕获列表，请参阅本教程中的<a href="https://www.raywenderlich.com/959-arc-and-memory-management-in-swift" target="_blank" rel="noopener">内存管理</a>。</p>
 <p>构建并运行该应用程序。通过 <strong>Le Internet</strong> 选项下载照片。选择一张照片，你会注意到视图控制器加载速度明显加快，并在短时间延迟后添加瞪视的眼睛:</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476477989086.jpg" alt="-w375"> </p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476477989086.jpg" alt="-w375"> </p>
 <p>当瞪视的眼睛出现时，这给应用程序带来了很好的前后效果。即使你试图加载一个巨大的图像，你的应用也不会在视图控制器加载时挂起。      </p>
 <p>通常，当你需要在后台执行基于网络或 CPU 密集型任务而不是阻塞当前线程时，你需要使用 <code>async</code>。</p>
 <p>这里有一个关于如何以及何时使用 <code>async</code> 的各种队列的快速指南:</p>
@@ -295,7 +295,7 @@
 </ol>
 <p><code>showOrHideNavPrompt()</code> 在 <code>viewDidLoad()</code> 中执行，并且在任何时候重载 <code>UICollectionView</code>。</p>
 <p>构建并运行应用程序。在你看到提示之前，应该会有一点延迟:</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476481524296.jpg" alt="-w375"></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476481524296.jpg" alt="-w375"></p>
 <blockquote>
 <p>注意:你可以忽略 Xcode 控制台中的自动布局消息。它们都来自 iOS，不会显示你的错误。</p>
 </blockquote>
@@ -331,7 +331,7 @@
 <p>当你将 <code>DispatchWorkItem</code> 提交到分派队列时，你可以设置标志来指示它应该是该特定时间在指定队列上执行的唯一项。这意味着在分派屏障之前提交到队列的所有项必须在 <code>DispatchWorkItem</code> 执行之前完成。</p>
 <p>当轮到 <code>DispatchWorkItem</code> 时，barrier 执行它，并确保队列在此期间不执行任何其他任务。一旦完成，队列返回到它的默认实现。</p>
 <p>下图说明了屏障对各种异步任务的影响:</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476486067932.png" alt=""></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476486067932.png" alt=""></p>
 <p>请注意，在正常操作中，队列的行为就像一个正常的并发队列。但是当 barrier 执行时，它实际上就像一个串行队列。也就是说，势垒是唯一执行的东西。屏障完成后，队列恢复为正常的并发队列。</p>
 <p>在全局后台并发队列中使用屏障时要小心，因为这些队列是共享资源。在自定义串行队列中使用屏障是多余的，因为它已经串行执行。在自定义并发队列中使用屏障对于处理原子或关键代码区域中的线程安全是一个很好的选择。</p>
 <p>你将使用自定义并发队列来处理 barrier 函数，并将读写函数分开。并发队列将允许同时执行多个读取操作。</p>
@@ -369,7 +369,7 @@
 <li>将照片阵列的副本存储在 <code>photosCopy</code> 中并返回。</li>
 </ol>
 <p>构建并运行该应用程序。通过 <strong>Le Internet</strong> 选项下载照片。它应该像以前那样工作，但是在底层，你有一些非常愉快的线程。</p>
-<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/media/15476437594320/15476489346624.jpg" alt="-w375"></p>
+<p><img src="/cynineblog/2019/01/17/1/media/15476437594320/15476489346624.jpg" alt="-w375"></p>
 <p>恭喜-你的 <code>PhotoManager</code> 单例现在是线程安全的!无论你在哪里，如何读或写照片，你都可以确信它将以一种安全的方式发生，不会有任何意外。</p>
 <h2 id="从这里去哪里"><a href="#从这里去哪里" class="headerlink" title="从这里去哪里?"></a>从这里去哪里?</h2><p>在这个重要的中央调度教程中，你学习了如何使代码线程安全，以及如何在执行CPU密集型任务时维护主线程的响应能力。</p>
 <p>下载<a href="https://koenig-media.raywenderlich.com/uploads/2018/08/GooglyPuff_Swift4_Materials_Part1-1.zip" target="_blank" rel="noopener">本教程项目</a>。它包含本教程到目前为止所做的所有改进。在本教程的第二部分中，你将继续改进这个项目。</p>
@@ -392,7 +392,7 @@
                     
                     
                         <li class="next">
-                            <a href="/cynineblog/2015/07/09/js-module-7day/" data-toggle="tooltip" data-placement="top" title="Example Post using Keynote Layout">Next Post &rarr;</a>
+                            <a href="/cynineblog/2019/01/17/swift4-gcd-tutrial-part-1/" data-toggle="tooltip" data-placement="top" title="Swift 4 Grand Central Dispatch (GCD) 教程:第 1/2 部分">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -467,8 +467,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "hexo-theme-huxblog";
-    var disqus_identifier = "https://cynine.github.io/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/";
-    var disqus_url = "https://cynine.github.io/cynineblog/2019/01/17/swift4-gcd-tutorial-part-1/";
+    var disqus_identifier = "https://cynine.github.io/cynineblog/2019/01/17/1/";
+    var disqus_url = "https://cynine.github.io/cynineblog/2019/01/17/1/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
