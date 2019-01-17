@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/cynineblog/img/favicon.ico">
+
+    <title>
+        
+          swift4-gcd-tutoral-part-2 - Cynine的博客 | Cynine&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/cynineblog/">9号工作室</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/cynineblog/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://cynine.github.io/cynineblog/cynineblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/cynineblog/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/cynineblog/tags/#GCD" title="GCD">GCD</a>
+                        
+                    </div>
+                    <h1>swift4-gcd-tutoral-part-2</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by cynine on
+                        2019-01-17
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>在这个关于中央调度的 Swift 4 教程的第一部分中，学习所有关于多线程、调度队列和并发性的知识。</p>
+<blockquote>
+<p>作者:Evan Dekhayser <a href="https://www.raywenderlich.com/5370-grand-central-dispatch-tutorial-for-swift-4-part-1-2" target="_blank" rel="noopener">原文链接</a><br>Version: Swift 4.2, iOS 12, Xcode 10</p>
+</blockquote>
+<ul>
+<li><strong>更新说明</strong>:Evan Dekhayser 将本教程更新为 Swift 4.2。克里斯汀·艾伯纳西写了原著。</li>
+</ul>
+<p>欢迎来到本中央调度教程系列的第二部分，也是最后一部分!</p>
+<p>在本系列的第一部分中，你了解了并发、线程和 GCD 的工作方式。通过使用调度屏障和同步调度队列的组合，可以使单例线程安全读写。你还通过使用分派队列来延迟提示的显示，并在实例化视图控制器时异步卸载 CPU 密集型工作，从而增强了应用程序的 UX。</p>
+<p>在这第二篇中央调度教程中，你将使用与第一部分中一样的 <strong>GooglyPuff</strong> 应用程序。你将深入研究高级GCD 概念，包括分派组、取消分派块、异步测试技术和分派源。</p>
+<p>是时候探索更多的 GCD 了!</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>你可以从第一部分的示例项目中继续学习。或者，下载本部分教程<a href="https://koenig-media.raywenderlich.com/uploads/2018/08/GooglyPuff_Swift4_Materials_Part2-1.zip" target="_blank" rel="noopener">示例项目</a>。</p>
+<p>运行 app，点击 <strong>+</strong>，选择 <strong>Le Internet</strong> 添加网络照片。你可能会注意到，在图像下载完成之前，会弹出一个下载完成警告消息:</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477290964866.jpg" alt=""></p>
+<p>你要做的第一件事就是修复这个警告弹框。</p>
+<h2 id="Dispatch-Groups"><a href="#Dispatch-Groups" class="headerlink" title="Dispatch Groups"></a>Dispatch Groups</h2><p>打开 <strong>PhotoManager.swift</strong> 检查 <code>downloadPhotos (withCompletion:):</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">downloadPhotos</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    withCompletion completion: BatchPhotoDownloadingCompletionClosure?)</span></span> &#123;</span><br><span class="line">  <span class="keyword">var</span> storedError: <span class="type">NSError</span>?</span><br><span class="line">  <span class="keyword">for</span> address <span class="keyword">in</span> [<span class="type">PhotoURLString</span>.overlyAttachedGirlfriend,</span><br><span class="line">                  <span class="type">PhotoURLString</span>.successKid,</span><br><span class="line">                  <span class="type">PhotoURLString</span>.lotsOfFaces] &#123;</span><br><span class="line">                    <span class="keyword">let</span> url = <span class="type">URL</span>(string: address)</span><br><span class="line">                    <span class="keyword">let</span> photo = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">                      <span class="keyword">if</span> error != <span class="literal">nil</span> &#123;</span><br><span class="line">                        storedError = error</span><br><span class="line">                      &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="type">PhotoManager</span>.shared.addPhoto(photo)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    completion?(storedError)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>传入方法的 <code>completion</code> 闭包触发警报。在下载照片的 <code>for</code> 循环之后调用它。在调用闭包之前，你错误地假设下载已经完成。</p>
+<p>通过调用 <code>DownloadPhoto(url:)</code> 启动照片下载。这个调用立即返回，但是实际的下载是异步进行的。因此，当 <code>complete</code> 运行时，不能保证所有下载都已经完成。</p>
+<p>你想要的是为 <code>downloadPhotos(withCompletion:)</code> 在所有照片下载任务完成后调用它的完成闭包。如何监视这些并发异步事件来实现这一点? 使用当前的方法，你不知道任务何时完成，它们可以以任何顺序完成。</p>
+<p>好消息!这正是 <strong>dispatch groups</strong> 存在的原因。使用分派组，你可以将多个任务分组在一起，并等待它们完成，或者在它们完成后接收通知。任务可以是异步的，也可以是同步的，甚至可以在不同的队列上运行。</p>
+<p><code>DispatchGroup</code> 管理分派组。首先看一下它的 <code>wait</code> 方法。这将阻塞当前线程，直到组的所有排队任务完成。</p>
+<p>打开 <strong>PhotoManager.swift</strong>，并将 <code>downloadPhotos(with completion:)</code> 中的代码替换为:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .userInitiated).async &#123;</span><br><span class="line">  <span class="keyword">var</span> storedError: <span class="type">NSError</span>?</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">let</span> downloadGroup = <span class="type">DispatchGroup</span>()</span><br><span class="line">  <span class="keyword">for</span> address <span class="keyword">in</span> [<span class="type">PhotoURLString</span>.overlyAttachedGirlfriend, </span><br><span class="line">                  <span class="type">PhotoURLString</span>.successKid,</span><br><span class="line">                  <span class="type">PhotoURLString</span>.lotsOfFaces] &#123;</span><br><span class="line">    <span class="keyword">let</span> url = <span class="type">URL</span>(string: address)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3</span></span><br><span class="line">    downloadGroup.enter()</span><br><span class="line">    <span class="keyword">let</span> photo = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> error != <span class="literal">nil</span> &#123;</span><br><span class="line">        storedError = error</span><br><span class="line">      &#125;   </span><br><span class="line"></span><br><span class="line">      <span class="comment">// 4</span></span><br><span class="line">      downloadGroup.leave()</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="type">PhotoManager</span>.shared.addPhoto(photo)</span><br><span class="line">  &#125;   </span><br><span class="line"></span><br><span class="line">  <span class="comment">// 5      </span></span><br><span class="line">  downloadGroup.wait()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 6</span></span><br><span class="line">  <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">    completion?(storedError)</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是代码的分步操作:</p>
+<ol>
+<li>由于使用的是阻塞当前线程的同步 <code>wait</code> 方法，因此使用 <code>async</code> 将整个方法放置到后台队列中，以确保不会阻塞主线程。</li>
+<li>创建一个新的分派组。</li>
+<li>调用 <code>enter()</code> 手动通知组任务已经启动。你必须平衡 <code>enter()</code> 调用和 <code>leave()</code> 调用的数量，否则应用程序将崩溃。</li>
+<li>在这里，你通知组该工作已经完成。</li>
+<li>调用 <code>wait()</code> 在等待任务完成时阻塞当前线程。这将永远等待，这很好，因为照片创建任务总是完成的。你可以使用 <code>wait(timeout:)</code> 来指定超时，并在指定时间之后退出等待。</li>
+<li>此时，可以保证所有映像任务都已完成或超时。然后调用主队列来运行完成闭包。</li>
+</ol>
+<p>构建并运行该应用程序。通过 <strong>Le Internet</strong> 选项下载照片，并验证直到所有图片下载完成后警报才会显示。</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477291144518.png" alt=""></p>
+<blockquote>
+<p><strong>注意</strong>:如果网络活动发生得太快，以至于无法判断何时应该调用完成闭包，并且你正在设备上运行该应用程序，那么你可以通过在iOS <strong>Settings</strong> 应用程序的 <strong>Developer</strong> 部分切换一些网络设置来确保这确实有效。只需转到 <strong>Network Link conditioning</strong> 部分，启用它，并选择一个配置文件。“非常糟糕的网络”是个不错的选择。</p>
+</blockquote>
+<blockquote>
+<p>如果你在模拟器上运行，可以使用<a href="https://nshipster.com/network-link-conditioner/" target="_blank" rel="noopener">Network Link Conditioner included in the Advanced Tools for Xcode</a> 来改变你的网络速度。这是一个很好的工具，因为它迫使你意识到当连接速度低于最佳状态时应用程序会发生什么。</p>
+</blockquote>
+<p>对于所有类型的队列，Dispatch groups 都是一个很好的候选。如果你正在同步等待所有工作的完成，那么在使用主队列上的 Dispatch groups 时应该小心，因为你不想占用主线程。然而，异步模型是一种很有吸引力的方式，可以在几个长时间运行的任务(如网络调用)完成后更新 UI。</p>
+<p>你当前的解决方案很好，但是通常最好尽可能避免阻塞线程。你的下一个任务是重写相同的方法，以便在所有下载完成时异步通知你。</p>
+<h2 id="Dispatch-Groups-2"><a href="#Dispatch-Groups-2" class="headerlink" title="Dispatch Groups, 2"></a>Dispatch Groups, 2</h2><p>异步地调度到另一个队列，然后使用 <code>wait</code> 阻塞工作是笨拙的。幸运的是，还有更好的方法。<code>DispatchGroup</code> 可以在组的所有任务完成时通知你。</p>
+<p>依然是在 <strong>PhotoManager.swift</strong>，用以下代码替换 <code>downloadPhotos(with completion:)</code> 中的代码:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">var</span> storedError: <span class="type">NSError</span>?</span><br><span class="line"><span class="keyword">let</span> downloadGroup = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="keyword">for</span> address <span class="keyword">in</span> [<span class="type">PhotoURLString</span>.overlyAttachedGirlfriend,</span><br><span class="line">                <span class="type">PhotoURLString</span>.successKid,</span><br><span class="line">                <span class="type">PhotoURLString</span>.lotsOfFaces] &#123;</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">URL</span>(string: address)</span><br><span class="line">  downloadGroup.enter()</span><br><span class="line">  <span class="keyword">let</span> photo = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> error != <span class="literal">nil</span> &#123;</span><br><span class="line">      storedError = error</span><br><span class="line">    &#125;   </span><br><span class="line">    downloadGroup.leave()</span><br><span class="line">  &#125;   </span><br><span class="line">  <span class="type">PhotoManager</span>.shared.addPhoto(photo)</span><br><span class="line">&#125;   </span><br><span class="line"></span><br><span class="line"><span class="comment">// 2    </span></span><br><span class="line">downloadGroup.notify(queue: <span class="type">DispatchQueue</span>.main) &#123;</span><br><span class="line">  completion?(storedError)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>事情是这样的:</p>
+<ol>
+<li>在这个新的实现中，你不需要在异步调用中包围该方法，因为你没有阻塞主线程。</li>
+<li><code>notify(queue:work:)</code> 用作异步完成闭包。当组中没有剩余项时，它将运行。你还指定要将完成工作安排在主队列上运行。</li>
+</ol>
+<p>这是处理这个特定任务的一种更简洁的方法，因为它不会阻塞任何线程。</p>
+<p>构建并运行应用程序。验证所有互联网照片下载完成后，下载完成提醒仍显示:</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477291396112.jpg" alt=""></p>
+<h2 id="并发性循环"><a href="#并发性循环" class="headerlink" title="并发性循环"></a>并发性循环</h2><p>有了这些可以使用的新工具，你可能应该对所有内容进行线程处理，对吗?</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477291503030.jpg" alt=""><br>    Thread ALL THE CODE!</p>
+<p>看看 <code>PhotoManager</code> 中的 <code>downloadPhotos(withCompletion:)</code>。你可能会注意到其中有一个 <code>for</code> 循环，它循环三个迭代并下载三个独立的图像。你的任务是查看是否可以并发地运行这个 <code>for</code> 循环，以尝试加快速度。</p>
+<p>这是 <code>dispatchqueue.concurrentexecute (iteration:execute:)</code> 的任务。它的工作原理类似于<code>for</code> 循环，因为它并发地执行不同的迭代。它是同步的，只有在所有工作完成时才返回。</p>
+<p>在计算给定工作量的最佳迭代次数时，你必须小心。多次迭代和每次迭代的少量工作可能会产生大量的开销，从而抵消并发调用所带来的任何收益。这种被称为跨步的技术可以帮助你走出困境。跨步允许你为每个迭代执行多个工作片段。</p>
+<p>什么时候使用  <code>dispatchqueue.concurrenteecute (iteration:execute:)</code> 比较合适? 你可以排除串行队列，因为它没有任何好处——你也可以使用普通的 <code>for</code> 循环。对于包含循环的并发队列来说，这是一个很好的选择，特别是当你需要跟踪进程时。</p>
+<p>在 <strong>PhotoManager.swift</strong> 中， 将 <code>downloadPhotos(with completion:)</code> 中的代码替换为:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> storedError: <span class="type">NSError</span>?</span><br><span class="line"><span class="keyword">let</span> downloadGroup = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="keyword">let</span> addresses = [<span class="type">PhotoURLString</span>.overlyAttachedGirlfriend,</span><br><span class="line">                 <span class="type">PhotoURLString</span>.successKid,</span><br><span class="line">                 <span class="type">PhotoURLString</span>.lotsOfFaces]</span><br><span class="line"><span class="keyword">let</span> <span class="number">_</span> = <span class="type">DispatchQueue</span>.global(qos: .userInitiated)</span><br><span class="line"><span class="type">DispatchQueue</span>.concurrentPerform(iterations: addresses.<span class="built_in">count</span>) &#123; index <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">let</span> address = addresses[index]</span><br><span class="line">  <span class="keyword">let</span> url = <span class="type">URL</span>(string: address)</span><br><span class="line">  downloadGroup.enter()</span><br><span class="line">  <span class="keyword">let</span> photo = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">if</span> error != <span class="literal">nil</span> &#123;</span><br><span class="line">      storedError = error</span><br><span class="line">    &#125;</span><br><span class="line">    downloadGroup.leave()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">PhotoManager</span>.shared.addPhoto(photo)</span><br><span class="line">&#125;</span><br><span class="line">downloadGroup.notify(queue: <span class="type">DispatchQueue</span>.main) &#123;</span><br><span class="line">  completion?(storedError)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你将前面的 <code>for</code> 循环替换为 <code>dispatchqueue.concurrentexecute (iteration:execute:)</code> 来处理并发循环。</p>
+<p>这个实现包括一行奇怪的代码: <code>let _ = DispatchQueue。global(qos: .userInitiated)</code>。调用此函数将导致 GCD 对并发调用使用具有 <code>.userstarted</code> 服务质量的队列。</p>
+<p>建立和运行应用程序。验证互联网下载功能仍然正常运行:</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477291669882.jpg" alt=""></p>
+<p>在设备上运行这些新代码偶尔会产生稍微快一点的结果。但这一切都值得吗?</p>
+<p>实际上，在这种情况下不值得这么做。原因如下:</p>
+<ol>
+<li>你可能已经创建了更多并行运行线程的开销，而不仅仅是首先运行 <code>for</code> 循环。你应该使用<code>dispatchqueue.concurrentexecute (iteration:execute:)</code> 来遍历非常大的集合和适当的步长。</li>
+<li>你有有限的时间来创建一个应用程序-不要浪费时间预先优化代码，你不知道是坏的。如果你要优化某件事，那就优化那些值得注意、值得花时间去做的事。通过在工具中分析应用程序，找到执行时间最长的方法。查看如何使用Xcode中的工具<a href="https://www.raywenderlich.com/?p=23037" target="_blank" rel="noopener">How to Use Instruments in Xcode</a>来了解更多信息。</li>
+<li>通常，优化代码会使你的代码对你自己和你之后的其他开发人员来说更加复杂。确保增加的复杂性是值得的。</li>
+</ol>
+<p>记住，不要为优化而疯狂。你只会让你自己和其他不得不费力阅读你的代码的人更加困难。</p>
+<h2 id="取消调度模块"><a href="#取消调度模块" class="headerlink" title="取消调度模块"></a>取消调度模块</h2><p>到目前为止，还没有看到允许取消排队任务的代码。这就是 <code>DispatchWorkItem</code> 所表示的 dispatch 块对象成为焦点的地方。请注意，你只能在 <code>DispatchWorkItem</code> 到达队列头部并开始执行之前取消它。</p>
+<p>让我们通过从 <strong>Le Internet</strong> 开始下载几个图像的任务，然后取消其中一些来演示这一点。</p>
+<p>还在 <strong>PhotoManager.swift</strong>，将 <code>downloadPhotos(with completion:)</code> 中的代码替换为:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> storedError: <span class="type">NSError</span>?</span><br><span class="line"><span class="keyword">let</span> downloadGroup = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="keyword">var</span> addresses = [<span class="type">PhotoURLString</span>.overlyAttachedGirlfriend,</span><br><span class="line">                 <span class="type">PhotoURLString</span>.successKid,</span><br><span class="line">                 <span class="type">PhotoURLString</span>.lotsOfFaces]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line">addresses += addresses + addresses</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">var</span> blocks: [<span class="type">DispatchWorkItem</span>] = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index <span class="keyword">in</span> <span class="number">0</span>..&lt;addresses.<span class="built_in">count</span> &#123;</span><br><span class="line">  downloadGroup.enter()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="keyword">let</span> block = <span class="type">DispatchWorkItem</span>(flags: .inheritQoS) &#123;</span><br><span class="line">    <span class="keyword">let</span> address = addresses[index]</span><br><span class="line">    <span class="keyword">let</span> url = <span class="type">URL</span>(string: address)</span><br><span class="line">    <span class="keyword">let</span> photo = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">      <span class="keyword">if</span> error != <span class="literal">nil</span> &#123;</span><br><span class="line">        storedError = error</span><br><span class="line">      &#125;</span><br><span class="line">      downloadGroup.leave()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">PhotoManager</span>.shared.addPhoto(photo)</span><br><span class="line">  &#125;</span><br><span class="line">  blocks.append(block)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 4</span></span><br><span class="line">  <span class="type">DispatchQueue</span>.main.async(execute: block)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="keyword">for</span> block <span class="keyword">in</span> blocks[<span class="number">3</span>..&lt;blocks.<span class="built_in">count</span>] &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 6</span></span><br><span class="line">  <span class="keyword">let</span> cancel = <span class="type">Bool</span>.random()</span><br><span class="line">  <span class="keyword">if</span> cancel &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 7</span></span><br><span class="line">    block.cancel()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 8</span></span><br><span class="line">    downloadGroup.leave()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">downloadGroup.notify(queue: <span class="type">DispatchQueue</span>.main) &#123;</span><br><span class="line">  completion?(storedError)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是一步一步的代码</p>
+<ol>
+<li>展开 <code>address</code> 数组以保存每个映像的三个副本。</li>
+<li>初始化一个 <code>blocks</code> 数组，以保存分派块对象供以后使用。</li>
+<li>创建一个新的 <code>DispatchWorkItem</code>。传入 <code>flags</code> 参数以指定块应该从分派到的队列继承其服务质量类。然后，在闭包中定义要做的工作。</li>
+<li>将块异步分派到主队列。对于本例，使用主队列可以更容易地取消select块，因为它是一个串行队列。设置分派块的代码已经在主队列上执行，因此可以保证下载块将在稍后执行。</li>
+<li>通过切片 <code>blocks</code> 数组，可以跳过前三个下载块。</li>
+<li>这里使用 <code>Bool.random()</code> 在 <code>true</code> 与 <code>false</code> 之间随机选择。就像抛硬币一样。</li>
+<li>如果随机值为 <code>true</code>，则取消该块。这只能取消仍在队列中且尚未开始执行的块。不能在执行过程中取消一个块。</li>
+<li>在这里，你要记住从 dispatch group 中删除已取消的块。</li>
+</ol>
+<p>构建并运行应用程序，然后添加来自 <strong>Le Internet</strong> 的图像。你会发现这个应用程序现在可以下载超过三张图片。每次重新运行应用程序时，额外图像的数量都会发生变化。在队列中一些额外的图像下载开始之前，你会取消它们。</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477291943811.jpg" alt=""></p>
+<p>这是一个精心设计的示例，但它很好地说明了如何使用和取消分派块。</p>
+<p>Dispatch blocks 可以做很多事情，所以一定要查看<a href="https://developer.apple.com/documentation/dispatch/dispatchworkitem" target="_blank" rel="noopener">苹果的文档</a>。</p>
+<h2 id="杂项GCD有趣"><a href="#杂项GCD有趣" class="headerlink" title="杂项GCD有趣"></a>杂项GCD有趣</h2><p>但是等等!还有更多!下面是一些稍微偏离常规的额外函数。尽管你不会经常使用这些工具，但它们在正确的情况下会非常有用。</p>
+<h3 id="测试异步代码"><a href="#测试异步代码" class="headerlink" title="测试异步代码"></a>测试异步代码</h3><p>这听起来可能是一个疯狂的想法，但是你知道Xcode具有测试功能吗?查看完整版本我知道，有时候我喜欢假装它不存在，但是在代码中构建复杂关系时，编写和运行测试非常重要。</p>
+<p>Xcode测试都包含在 <code>XCTestCase</code> 的子类中，是任何以 <code>test</code> 开头的方法。测试在主线程上运行，因此你可以假设每个测试都以串行方式进行。</p>
+<p>一旦给定的测试方法完成，<strong>Xcode</strong> 就会认为测试已经完成，并转移到下一个测试。这意味着在运行下一个测试时，前一个测试中的任何异步代码都将继续运行。</p>
+<p>网络代码通常是异步的，因为你不想在执行网络获取时阻塞主线程。这一点，再加上测试方法完成时测试就完成这一事实，使得测试网络代码变得非常困难。</p>
+<p>让我们来看看如何使用<strong>信号量</strong>来测试异步代码。</p>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量是一种老式的线程概念，是由非常谦逊的 Edsger W. Dijkstra 引入的。信号量是一个复杂的主题，因为它们建立在操作系统功能的复杂性之上。</p>
+<p>如果你想了解更多关于信号量的知识，请查看关于<a href="https://greenteapress.com/wp/semaphores/" target="_blank" rel="noopener">信号量理论</a>的详细讨论。如果你是学术型的，你可能想查看餐饮哲学家问题，这是一个使用信号量的<a href="https://en.wikipedia.org/wiki/Dining_philosophers_problem" target="_blank" rel="noopener">经典软件开发问题</a>。</p>
+<p>打开 <strong>GooglyPuffTests.swift</strong>, 用以下代码替换 <code>downloadImageURL(with string:)</code> 中的代码:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> url = <span class="type">URL</span>(string: urlString)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line"><span class="keyword">let</span> <span class="number">_</span> = <span class="type">DownloadPhoto</span>(url: url!) &#123; <span class="number">_</span>, error <span class="keyword">in</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">let</span> error = error &#123;</span><br><span class="line">    <span class="type">XCTFail</span>(<span class="string">"\(urlString) failed. \(error.localizedDescription)"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  semaphore.signal()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> timeout = <span class="type">DispatchTime</span>.now() + .seconds(defaultTimeoutLengthInSeconds)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="keyword">if</span> semaphore.wait(timeout: timeout) == .timedOut &#123;</span><br><span class="line">  <span class="type">XCTFail</span>(<span class="string">"\(urlString) timed out"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是上面代码中信号量的工作方式:</p>
+<ol>
+<li>创建一个信号量并设置其初始值。这表示不需要增加信号量就可以访问信号量的东西的数量(注意，增加信号量被称为发送信号)。</li>
+<li>在完成闭包中对信号量发出信号。这将增加信号量计数，并向需要信号量的其他资源发出信号。</li>
+<li>你使用给定的超时等待信号量。此调用阻塞当前线程，直到信号量发出信号。此函数的非零返回代码意味着超时时间已过。在这种情况下，测试失败是因为网络返回时间不应该超过10秒——这是一个合理的点!</li>
+</ol>
+<p>运行你的测试通过选择 <strong>Product &gt; Test</strong> 或者使用 <strong>Command-U</strong>, 如果你有默认的键绑定。它们都应及时取得成功:</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477292173010.jpg" alt=""></p>
+<p>禁用连接并再次运行测试。如果你在一个设备上运行，把它调到飞行模式。如果你在模拟器上运行，那么只需关闭连接。测试在10秒后以失败结果完成。太好了,这工作!</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477292310144.png" alt=""></p>
+<p>这些测试相当琐碎，但是如果你与服务器团队一起工作，这些基本测试可以防止对最新网络问题的责任进行全面的指责。</p>
+<blockquote>
+<p><strong>注意</strong>: 在代码中实现异步测试时，请先查看 <code>XCTWaiter</code>，然后再查看这些底层 API。<code>XCTWaiter</code> 的 API 更好，为异步测试提供了很多强大的技术。</p>
+</blockquote>
+<h2 id="Dispatch-sources"><a href="#Dispatch-sources" class="headerlink" title="Dispatch sources"></a>Dispatch sources</h2><p><strong>Dispatch sources</strong> 是 GCD 的一个特别有趣的特性。你可以使用分派源来监视某些类型的事件。事件可以包括Unix信号、文件描述符、Mach 端口、VFS 节点和其他模糊的东西。</p>
+<p>在设置分派源时，你要告诉它你想要监视的事件类型以及它的事件处理程序块应该在其上执行的分派队列。然后将事件处理程序分配给分派源。</p>
+<p>在创建时，分发源以挂起状态启动。这允许你执行所需的任何其他配置，例如设置事件处理程序。配置好分派源后，必须恢复它以开始处理事件。</p>
+<p>在本教程中，你将通过以一种特殊的方式使用分派源来略微了解分派源:监视应用程序何时进入调试模式。</p>
+<p>打开 <strong>PhotoCollectionViewController.swift</strong>, 在 <code>backgroundimage</code> 全局属性声明下面添加以下内容:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2</span></span><br><span class="line">  <span class="keyword">var</span> signal: <span class="type">DispatchSourceSignal</span>?</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 3</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">let</span> setupSignalHandlerFor = &#123; (<span class="number">_</span> object: <span class="type">AnyObject</span>) <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.main</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4</span></span><br><span class="line">    signal =</span><br><span class="line">      <span class="type">DispatchSource</span>.makeSignalSource(signal: <span class="type">SIGSTOP</span>, queue: queue)</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// 5</span></span><br><span class="line">    signal?.setEventHandler &#123;</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">"Hi, I am: \(object.description!)"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6</span></span><br><span class="line">    signal?.resume()</span><br><span class="line">  &#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>代码有点复杂，所以请一步一步来:</p>
+<ol>
+<li>调试是通过在 <strong>Project Settings -&gt; Build Settings -&gt; Swift Compiler -&gt; Custom Flags -&gt; Other Swift Flags -&gt; Debug</strong>。它应该已经在 <code>starter</code> 项目中设置好了。</li>
+<li>声明一个类型为 <code>DispatchSourceSignal</code> 的信号变量，用于监视Unix信号。</li>
+<li>创建一个分配给 <code>setupSignalHandlerFor</code> 全局变量的块，用于一次性设置分派源。</li>
+<li>在这里设置信号。如果你对监视SIGSTOP Unix信号和处理主队列上接收到的事件感兴趣，你很快就会发现原因。</li>
+<li>如果成功创建了分派源，则注册一个事件处理程序闭包，每当接收到 <code>SIGSTOP</code> 信号时就会调用该闭包。处理程序打印包含类描述的消息。</li>
+<li>默认情况下，所有源都以挂起状态开始。在这里，你告诉分派源恢复，以便它可以开始监视事件。</li>
+</ol>
+<p>在 <code>super.viewDidLoad()</code> 调用的下面添加以下代码到 <code>viewDidLoad()</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">  setupSignalHandlerFor(<span class="keyword">self</span>)</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>此代码调用分派源的初始化代码。</p>
+<p>构建并运行应用程序。在Xcode调试器中，暂停程序执行并立即恢复应用程序，点击Pause then play按钮:</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477292569483.png" alt=""></p>
+<p>检查控制台。你应该看到这样的东西:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Hi</span>, <span class="type">I</span> am: &lt;<span class="type">GooglyPuff</span>.<span class="type">PhotoCollectionViewController</span>: <span class="number">0x7fbf0af08a10</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>你的应用程序现在可以调试了!这非常棒，但是在现实生活中你会如何使用它呢?</p>
+<p>你可以使用它来调试对象，并在恢复应用程序时显示数据。还可以为应用程序提供自定义安全逻辑，以便在恶意攻击者将调试器附加到应用程序时保护自身(或用户的数据)。</p>
+<p>一个有趣的想法是将此方法用作堆栈跟踪工具，以查找要在调试器中操作的对象。</p>
+<p><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477292696651.jpg" alt=""></p>
+<pre><code>是时候锻炼一下GCD肌肉了。
+</code></pre><p>想一下这种情况。当你突然停止调试器时，你几乎永远不会处于所需的堆栈帧中。现在，你可以随时停止调试器，并让代码在你想要的位置执行。如果你希望在应用程序中执行调试器难以访问的代码时，这非常有用。试一下!</p>
+<p>在刚刚添加的 <code>setupSignalHandlerFor</code> 块内的 <code>print()</code> 语句中添加一个断点。</p>
+<p>在调试器中暂停，然后重新启动。应用程序将会遇到你添加的断点。你现在在<code>PhotoCollectionViewController</code> 方法的最深处。现在你可以访问<code>PhotoCollectionViewController</code> 的实例到你的核心内容。非常方便!</p>
+<blockquote>
+<p><strong>注意</strong>:如果你还没有注意到调试器中有哪些线程，那么现在就来看看它们。主线程始终是第一个线程，其次是libdispatch (GCD的协调器)，作为第二个线程。之后，线程数和剩余线程取决于应用程序遇到断点时硬件在做什么。</p>
+</blockquote>
+<p>在调试器控制台中，键入以下命令:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr <span class="selector-tag">object</span><span class="selector-class">.navigationItem</span><span class="selector-class">.prompt</span> = <span class="string">"WOOT!"</span></span><br></pre></td></tr></table></figure>
+<p>Xcode调试器有时是不合作的。如果你得到这样的信息:</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">error: </span>use of unresolved identifier 'self'</span><br></pre></td></tr></table></figure>
+<p>然后，你必须以一种比较困难的方式来解决LLDB中的bug。首先注意调试区域中 <code>object</code> 的地址:</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">po <span class="keyword">object</span></span><br></pre></td></tr></table></figure>
+<p>然后通过在调试器中运行以下命令，将值手动转换为你想要的类型，用输出地址替换 <code>0xHEXADDRESS</code>:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">expr let <span class="variable">$vc</span> = unsafeBitCast(<span class="number">0</span>xHEXADDRESS, to: GooglyPuff<span class="selector-class">.PhotoCollectionViewController</span><span class="selector-class">.self</span>)</span><br><span class="line">expr <span class="variable">$vc</span><span class="selector-class">.navigationItem</span><span class="selector-class">.prompt</span> = <span class="string">"WOOT!"</span></span><br></pre></td></tr></table></figure>
+<p>如果这不起作用，那么你很幸运——你在LLDB中遇到了另一个错误!在这种情况下，你可能必须尝试再次构建和运行该应用程序。</p>
+<p>成功运行此命令后，继续执行应用程序。<br><img src="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/15477292867673.jpg" alt=""></p>
+<p>使用这个方法，你可以更新 UI，查询类的属性，甚至执行方法——所有这些都不需要重新启动应用程序就可以进入特定的工作流状态。很整洁。</p>
+<h2 id="从这里去哪里"><a href="#从这里去哪里" class="headerlink" title="从这里去哪里?"></a>从这里去哪里?</h2><p>除了 GCD 之外，我建议你阅读 Swift 中的 <a href="https://www.raywenderlich.com/?p=76341" target="_blank" rel="noopener">Operation and OperationQueue Tutorial</a>，这是一种构建在 GCD 之上的并发技术。通常，如果你使用的是简单的即发即忘任务，那么最好使用 GCD。Operation 提供了更好的控制、处理最大并发操作的实现以及以速度为代价的更面向对象的范例。</p>
+<p>你还应该看看我们的 iOS 并发 GCD 和操作视频教程系列，它涵盖了很多我们在本教程中涉及的相同主题。</p>
+<p>请记住，除非你有降低级别的特定原因，否则请始终尝试使用更高级别的 API。只有当你想要学习更多或者做一些非常非常“有趣”的事情的时候，你才可以冒险尝试苹果的黑魔法。:]</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-1/" data-toggle="tooltip" data-placement="top" title="Swift 4 Grand Central Dispatch (GCD) 教程:第 1/2 部分">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/cynineblog/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/cynineblog/tags/#GCD" title="GCD">GCD</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Foo</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "hexo-theme-huxblog";
+    var disqus_identifier = "https://cynine.github.io/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/";
+    var disqus_url = "https://cynine.github.io/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/这个西西有点意思">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/cynine">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 9号工作室 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/cynineblog/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/cynineblog/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/cynineblog/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://cynine.github.io/cynineblog/cynineblog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'huangxuan.me';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://cynine.github.io/cynineblog/cynineblog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
