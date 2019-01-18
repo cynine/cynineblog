@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <link rel="shortcut icon" href="/cynineblog/img/favicon.ico">
+
+    <title>
+        
+          GCD知识总结 - Cynine的博客 | Cynine&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/2019/01/18/GCD知识总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/cynineblog/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/cynineblog/">9号工作室</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/cynineblog/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/cynineblog/archives/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://cynine.github.io/cynineblog/cynineblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/cynineblog/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/cynineblog/tags/#Swift" title="Swift">Swift</a>
+                        
+                          <a class="tag" href="/cynineblog/tags/#GCD" title="GCD">GCD</a>
+                        
+                    </div>
+                    <h1>GCD知识总结</h1>
+                    <h2 class="subheading">一些关于 GCD 的知识小结，持续更新...</h2>
+                    <span class="meta">
+                        Posted by Cynine on
+                        2019-01-18
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="GCD-知识点汇总"><a href="#GCD-知识点汇总" class="headerlink" title="GCD 知识点汇总"></a>GCD 知识点汇总</h2><p><strong>1.队列</strong></p>
+<ul>
+<li>主队列: 主队列是串行的，主队列上的每个任务都在主线程上运行。</li>
+<li>全局队列: 全局队列是通过操作系统共享的系统提供的并发队列。其中有四个队列是按照高、默认、低优先级和IO调整的后台队列组织的。</li>
+<li>自定义队列: 用户可以创建自定义队列。自定义并发队列总是通过指定服务质量属性(QoS)映射到全局队列之一。在大多数情况下，<strong>如果希望并行运行任务，建议使用全局并发队列，应该只创建自定义串行队列</strong>。</li>
+</ul>
+<p><strong>2.任务</strong></p>
+<ul>
+<li>同步任务</li>
+<li>异步任务    </li>
+</ul>
+<p><strong>3.分组</strong></p>
+<h2 id="QoS-类"><a href="#QoS-类" class="headerlink" title="QoS 类"></a>QoS 类</h2><p>优先级从上到下:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">userInteractive (<span class="type">UI</span> updates) -&gt; serial main queue</span><br><span class="line">userInitiated (async <span class="type">UI</span> related tasks) -&gt; high priority global queue</span><br><span class="line"><span class="keyword">default</span> -&gt; <span class="keyword">default</span> priority global queue</span><br><span class="line">utility -&gt; low priority global queue</span><br><span class="line">background -&gt; global background queue</span><br><span class="line">unspecified (lowest) -&gt; low priority global queue</span><br></pre></td></tr></table></figure>
+<h2 id="如何在-Swift-中使用-DispatchQueue-类"><a href="#如何在-Swift-中使用-DispatchQueue-类" class="headerlink" title="如何在 Swift 中使用 DispatchQueue 类?"></a>如何在 Swift 中使用 DispatchQueue 类?</h2><p><strong>获取队列方法:</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .userInitiated)</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .userInteractive)</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .background)</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .<span class="keyword">default</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .utility)</span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .unspecified)</span><br><span class="line"><span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.serial"</span>)</span><br><span class="line"><span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.concurrent"</span>, attributes: .concurrent)</span><br></pre></td></tr></table></figure>
+<p><strong>在后台执行任务，在主线程刷新 UI</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.globle(qos: .background).async &#123;</span><br><span class="line">    <span class="comment">// do your job here</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">DispatchQueue</span>.main.async &#123;</span><br><span class="line">        <span class="comment">// update ui here</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>在队列中同步执行和异步执行</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> q = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> text = q.sync &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"this will block"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(text)</span><br><span class="line"></span><br><span class="line">q.async &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"this will return instantly"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意:</strong> 不要从串行队列的线程中调用串行队列上的sync !</p>
+</blockquote>
+<p><strong>延迟执行</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main.asyncAfter(deadline: .now() + .seconds(<span class="number">2</span>)) &#123;</span><br><span class="line">    <span class="comment">// this code will be exeuted only after 2 seconds have been passed</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>执行并行循环</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.concurrentPerform(iterations: <span class="number">5</span>) &#123; (i) <span class="keyword">in</span> </span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>调试</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">DispatchQueue</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">var</span> currentLabel: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">String</span>(validatingUTF8: __dispatch_queue_get_label(<span class="literal">nil</span>))!</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//print(DispatchQueue.currentLabel)</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意：</strong>在生产代码中不要使用！！！</p>
+</blockquote>
+<h2 id="在-Swift-中使用-DispathWorkItem"><a href="#在-Swift-中使用-DispathWorkItem" class="headerlink" title="在 Swift 中使用 DispathWorkItem"></a>在 Swift 中使用 DispathWorkItem</h2><blockquote>
+<p>DispatchWorkItem 封装了可以执行的工作。可以将工作项分派到分派队列和分派组中。还可以将DispatchWorkItem 设置为 DispatchSource 事件、注册或取消处理程序。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> workItem: <span class="type">DispatchWorkItem</span>?</span><br><span class="line">workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>..&lt;<span class="number">6</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> item = workItem, !item.isCancelled <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"cancelled"</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">        sleep(<span class="number">1</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="type">String</span>(i))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">workItem?.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">DispatchQueue</span>.global().asyncAfter(deadline: .now() + .seconds(<span class="number">2</span>)) &#123;</span><br><span class="line">    workItem?.cancel()</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">DispatchQueue</span>.main.async(execute: workItem!)</span><br><span class="line"><span class="comment">// you can use perform to run on the current queue instead of queue.async(execute:)</span></span><br><span class="line"><span class="comment">//workItem?.perform()</span></span><br></pre></td></tr></table></figure>
+<h2 id="与-DispatchGroups-使用并发任务"><a href="#与-DispatchGroups-使用并发任务" class="headerlink" title="与 DispatchGroups 使用并发任务"></a>与 DispatchGroups 使用并发任务</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">load</span><span class="params">(delay: UInt32, completion: <span class="params">()</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">    sleep(delay)</span><br><span class="line">    completion()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line">group.enter()</span><br><span class="line">load(delay: <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.enter()</span><br><span class="line">load(delay: <span class="number">2</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.enter()</span><br><span class="line">load(delay: <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    group.leave()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意:</strong> enter( ) 和 leave( ) 方法同步使用</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.serial"</span>)</span><br><span class="line"><span class="keyword">let</span> workItem = <span class="type">DispatchWorkItem</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"start"</span>)</span><br><span class="line">    sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">queue.async(group: group) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group start"</span>)</span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"group end"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">DispatchQueue</span>.global().async(group: group, execute: workItem)</span><br><span class="line"></span><br><span class="line"><span class="comment">// you can block your current queue and wait until the group is ready</span></span><br><span class="line"><span class="comment">// a better way is to use a notification block instead of blocking</span></span><br><span class="line"><span class="comment">//group.wait(timeout: .now() + .seconds(3))</span></span><br><span class="line"><span class="comment">//print("done")</span></span><br><span class="line"></span><br><span class="line">group.notify(queue: .main) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// group start</span></span><br><span class="line"><span class="comment">// start</span></span><br><span class="line"><span class="comment">// end</span></span><br><span class="line"><span class="comment">// group end</span></span><br><span class="line"><span class="comment">// done</span></span><br></pre></td></tr></table></figure>
+<p><strong>DispatchGroup wait()用法</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line">        <span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line">        <span class="keyword">let</span> n = <span class="number">9</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;n &#123;</span><br><span class="line">            queue.async(group: group) &#123;</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"\(i): Running async task..."</span>)</span><br><span class="line">                sleep(<span class="number">3</span>)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">"\(i): Async task completed"</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        group.wait()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"done"</span>)</span><br><span class="line">        </span><br><span class="line"><span class="comment">//6: Running async task...</span></span><br><span class="line"><span class="comment">//5: Running async task...</span></span><br><span class="line"><span class="comment">//8: Running async task...</span></span><br><span class="line"><span class="comment">//7: Running async task...</span></span><br><span class="line"><span class="comment">//3: Running async task...</span></span><br><span class="line"><span class="comment">//1: Running async task...</span></span><br><span class="line"><span class="comment">//4: Running async task...</span></span><br><span class="line"><span class="comment">//0: Running async task...</span></span><br><span class="line"><span class="comment">//2: Running async task...</span></span><br><span class="line"><span class="comment">//5: Async task completed</span></span><br><span class="line"><span class="comment">//8: Async task completed</span></span><br><span class="line"><span class="comment">//6: Async task completed</span></span><br><span class="line"><span class="comment">//7: Async task completed</span></span><br><span class="line"><span class="comment">//3: Async task completed</span></span><br><span class="line"><span class="comment">//4: Async task completed</span></span><br><span class="line"><span class="comment">//2: Async task completed</span></span><br><span class="line"><span class="comment">//1: Async task completed</span></span><br><span class="line"><span class="comment">//0: Async task completed</span></span><br><span class="line"><span class="comment">//done</span></span><br></pre></td></tr></table></figure>
+<h2 id="Semaphores-信号量"><a href="#Semaphores-信号量" class="headerlink" title="Semaphores) 信号量"></a><a href="https://en.wikipedia.org/wiki/Semaphore_\(programming\" target="_blank" rel="noopener">Semaphores</a>) 信号量</h2><p><strong>如何使异步任务同步?</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">DispatchError</span>: <span class="title">Error</span> </span>&#123;</span><br><span class="line">    <span class="keyword">case</span> timeout</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">asyncMethod</span><span class="params">(completion: <span class="params">(String)</span></span></span> -&gt; <span class="type">Void</span>) &#123;</span><br><span class="line">    sleep(<span class="number">2</span>)</span><br><span class="line">    completion(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">syncMethod</span><span class="params">()</span></span> <span class="keyword">throws</span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> response: <span class="type">String</span>?</span><br><span class="line">    queue.async &#123;</span><br><span class="line">        asyncMethod &#123; r <span class="keyword">in</span></span><br><span class="line">            response = r</span><br><span class="line">            semaphore.signal()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    semaphore.wait(timeout: .now() + <span class="number">5</span>)</span><br><span class="line">    <span class="keyword">guard</span> <span class="keyword">let</span> result = response <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="type">DispatchError</span>.timeout</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> response = <span class="keyword">try</span>? syncMethod()</span><br><span class="line"><span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+<p><strong>锁定/单一访问资源</strong></p>
+<p>如果想避免竞态条件，可能会用到互斥。这可以通过使用信号量对象来实现，但是如果对象需要大量的读取能力，应该考虑基于 dispatch barrier 的解决方案。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LockedNumbers</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">var</span> elements: [<span class="type">Int</span>] = []</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">append</span><span class="params">(<span class="number">_</span> num: Int)</span></span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.semaphore.wait(timeout: <span class="type">DispatchTime</span>.distantFuture)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"appended: \(num)"</span>)</span><br><span class="line">        <span class="keyword">self</span>.elements.append(num)</span><br><span class="line">        <span class="keyword">self</span>.semaphore.signal()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">removeLast</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.semaphore.wait(timeout: <span class="type">DispatchTime</span>.distantFuture)</span><br><span class="line">        <span class="keyword">defer</span> &#123;</span><br><span class="line">            <span class="keyword">self</span>.semaphore.signal()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">guard</span> !<span class="keyword">self</span>.elements.isEmpty <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> num = <span class="keyword">self</span>.elements.removeLast()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"removed: \(num)"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> items = <span class="type">LockedNumbers</span>()</span><br><span class="line">items.append(<span class="number">1</span>)</span><br><span class="line">items.append(<span class="number">2</span>)</span><br><span class="line">items.append(<span class="number">5</span>)</span><br><span class="line">items.append(<span class="number">3</span>)</span><br><span class="line">items.removeLast()</span><br><span class="line">items.removeLast()</span><br><span class="line">items.append(<span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(items.elements)</span><br></pre></td></tr></table></figure>
+<p><strong>等待多个任务执行完成</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> semaphore = <span class="type">DispatchSemaphore</span>(value: <span class="number">0</span>)</span><br><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>.global()</span><br><span class="line"><span class="keyword">let</span> n = <span class="number">9</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;n &#123;</span><br><span class="line">    queue.async &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"run \(i)"</span>)</span><br><span class="line">        sleep(<span class="number">3</span>)</span><br><span class="line">        semaphore.signal()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"wait"</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;n &#123;</span><br><span class="line">    semaphore.wait()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"completed \(i)"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"done"</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>使用信号量批量执行</strong></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"start"</span>)</span><br><span class="line"><span class="keyword">let</span> sem = <span class="type">DispatchSemaphore</span>(value: <span class="number">5</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">10</span> &#123;</span><br><span class="line">    <span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">        sem.wait()</span><br><span class="line">        sleep(<span class="number">2</span>)</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">        sem.signal()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"end"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="DispatchSource对象"><a href="#DispatchSource对象" class="headerlink" title="DispatchSource对象"></a>DispatchSource对象</h2><blockquote>
+<p>DispatchSource 是一种基本数据类型，用于协调特定底层系统事件的处理。</p>
+</blockquote>
+<p>信号、描述符、进程、端口、计时器等等。一切都是通过 dispatch source 对象处理的。这都是一些底层的东西。可以使用分派源监视文件、端口和信号。<a href="https://developer.apple.com/library/archive/documentation/General/Conceptual/ConcurrencyProgrammingGuide/GCDWorkQueues/GCDWorkQueues.html" target="_blank" rel="noopener">苹果官方文档</a></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> timer = <span class="type">DispatchSource</span>.makeTimerSource()</span><br><span class="line">timer.schedule(deadline: .now(), repeating: .seconds(<span class="number">1</span>))</span><br><span class="line">timer.setEventHandler &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"hello"</span>)</span><br><span class="line">&#125;</span><br><span class="line">timer.resume()</span><br></pre></td></tr></table></figure>
+<h2 id="使用-dispatch-框架的线程安全性"><a href="#使用-dispatch-框架的线程安全性" class="headerlink" title="使用 dispatch 框架的线程安全性"></a>使用 dispatch 框架的线程安全性</h2><p>对于多线程代码来说，线程安全是一个不可避免的话题。一开始我提到在 GCD 的引擎盖下有一个线程池。每个线程都有一个与之关联的运行循环对象，甚至可以手动运行它们。如果手动创建线程，则运行循环将自动添加到该线程。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> t = <span class="type">Thread</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="type">Thread</span>.current.name ?? <span class="string">""</span>)</span><br><span class="line">     <span class="keyword">let</span> timer = <span class="type">Timer</span>(timeInterval: <span class="number">1</span>, repeats: <span class="literal">true</span>) &#123; t <span class="keyword">in</span></span><br><span class="line">         <span class="built_in">print</span>(<span class="string">"tick"</span>)</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="type">RunLoop</span>.current.add(timer, forMode: .defaultRunLoopMode)</span><br><span class="line">    </span><br><span class="line">    <span class="type">RunLoop</span>.current.run()</span><br><span class="line">    <span class="type">RunLoop</span>.current.run(mode: .commonModes, before: <span class="type">Date</span>.distantPast)</span><br><span class="line">&#125;</span><br><span class="line">t.name = <span class="string">"my-thread"</span></span><br><span class="line">t.start()</span><br><span class="line"></span><br><span class="line"><span class="comment">//RunLoop.current.run()</span></span><br></pre></td></tr></table></figure>
+<p>!!! 不应该这样做,演示目的,总是使用GCD队列!</p>
+<p><strong>队列 ！= 线程</strong></p>
+<p>GCD队列不是线程，如果在一个并发队列上运行多个异步操作，那么代码可以在任何满足需求的可用线程上运行。</p>
+<blockquote>
+<p>线程安全是关于避免混乱的可变状态</p>
+</blockquote>
+<p>想象一下Swift中的可变数组。它可以从任何线程修改。这不太好，因为如果数组不是线程安全的，它里面的值最终会乱套。例如，多个线程试图向数组插入值。会发生什么呢?如果它们并行运行哪个元素将首先被添加?这就是为什么有时需要创建线程安全的资源。</p>
+<p><strong>串行队列</strong></p>
+<p>可以使用串行队列强制互斥。队列上的所有任务都将串行运行(以FIFO顺序)，一次只运行一个进程，任务必须彼此等待。解决方案的一大缺点是速度。🐌</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> q = <span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.serial"</span>)</span><br><span class="line"> </span><br><span class="line">q.async() &#123;</span><br><span class="line">  <span class="comment">// writes</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">q.sync() &#123;</span><br><span class="line">  <span class="comment">// reads</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>并行队列使用 barriers</strong></p>
+<p>如果向异步方法提供额外的标志，则可以将 barrier 任务发送到队列。如果这样的任务到达队列，它将确保在barrier任务完成之前不会执行任何其他任务。综上所述，barrier 任务是并发队列的 sync (points) 任务。对写使用异步屏障，对读使用同步块。😎</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> q = <span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.concurrent"</span>, attributes: .concurrent)</span><br><span class="line"> </span><br><span class="line">q.async(flags: .barrier) &#123;</span><br><span class="line">  <span class="comment">// writes</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">q.sync() &#123;</span><br><span class="line">  <span class="comment">// reads</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法将在线程安全的环境中产生非常快的读取。还可以使用串行队列、信号量、锁，这一切都取决于当前情况，但是最好知道所有可用的选项，不是吗?🤐</p>
+<p><strong>一些反模式</strong></p>
+<p>必须非常小心死锁、竞态条件和读写器问题。通常，在串行队列上调用 sync 方法会导致大多数问题。另一个问题是线程安全，但是我们已经讨论了这一部分。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>(label: <span class="string">"com.theswiftdev.queues.serial"</span>)</span><br><span class="line"></span><br><span class="line">queue.sync &#123;</span><br><span class="line">    <span class="comment">// do some sync work</span></span><br><span class="line">    queue.sync &#123;</span><br><span class="line">        <span class="comment">// this won't be executed -&gt; deadlock!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//What you are trying to do here is to launch the main thread synchronously from a background thread before it exits. This is a logical error.</span></span><br><span class="line"><span class="comment">//https://stackoverflow.com/questions/49258413/dispatchqueue-crashing-with-main-sync-in-swift?rq=1</span></span><br><span class="line"><span class="type">DispatchQueue</span>.global(qos: .utility).sync &#123;</span><br><span class="line">    <span class="comment">// do some background task</span></span><br><span class="line">    <span class="type">DispatchQueue</span>.main.sync &#123;</span><br><span class="line">        <span class="comment">// app will crash</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="其他资料"><a href="#其他资料" class="headerlink" title="其他资料"></a>其他资料</h2><ul>
+<li><a href="https://theswiftdev.com/2017/08/22/tasks-and-threads-in-swift/" target="_blank" rel="noopener">Tasks and threads in Swift</a></li>
+<li><a href="https://theswiftdev.com/2017/08/29/concurrency-model-in-swift/" target="_blank" rel="noopener">Concurrency model in Swift</a></li>
+<li><a href="https://developer.apple.com/documentation/dispatch" target="_blank" rel="noopener">Dispatch - Apple Developer Documentation</a></li>
+<li><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html" target="_blank" rel="noopener">Run Loops - Apple Developer Documentation</a></li>
+<li><a href="https://www.raywenderlich.com/5370-grand-central-dispatch-tutorial-for-swift-4-part-1-2" target="_blank" rel="noopener">Grand Central Dispatch Tutorial for Swift 3</a></li>
+<li><a href="https://www.swiftbysundell.com/posts/a-deep-dive-into-grand-central-dispatch-in-swift" target="_blank" rel="noopener">A deep dive into Grand Central Dispatch in Swift</a></li>
+<li><a href="https://www.appcoda.com/grand-central-dispatch/" target="_blank" rel="noopener">Grand Central Dispatch (GCD) and Dispatch Queues in Swift 3</a></li>
+<li><a href="http://basememara.com/creating-thread-safe-arrays-in-swift/" target="_blank" rel="noopener">Creating Thread-Safe Arrays in Swift</a></li>
+<li><a href="https://www.uraimo.com/2017/05/07/all-about-concurrency-in-swift-1-the-present/" target="_blank" rel="noopener">All about Concurrency in Swift - Part 1: The Present</a></li>
+</ul>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/cynineblog/2019/01/17/Almofire-tutorial/" data-toggle="tooltip" data-placement="top" title="Alamofire教程:入门">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/cynineblog/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/cynineblog/tags/#Swift" title="Swift">Swift</a>
+                        
+                          <a class="tag" href="/cynineblog/tags/#GCD" title="GCD">GCD</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Foo</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "hexo-theme-huxblog";
+    var disqus_identifier = "https://cynine.github.io/cynineblog/2019/01/18/GCD知识总结/";
+    var disqus_url = "https://cynine.github.io/cynineblog/2019/01/18/GCD知识总结/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/这个西西有点意思">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/cynine">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 9号工作室 2019 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/cynineblog/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/cynineblog/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/cynineblog/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://cynine.github.io/cynineblog/cynineblog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'huangxuan.me';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://cynine.github.io/cynineblog/cynineblog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -13,11 +13,11 @@
 
     <title>
         
-          Archives - Cynine的博客 | Cynine&#39;s Blog
+          Alamofire教程:入门 - Cynine的博客 | Cynine&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/archives/">
+    <link rel="canonical" href="https://cynine.github.io/cynineblog/cynineblog/2019/01/17/Almofire-tutorial/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/cynineblog/css/bootstrap.min.css">
@@ -147,214 +147,223 @@
 
 
     <!-- Main Content -->
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/cynineblog/img/tag-bg.jpg')">
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://cynine.github.io/cynineblog/cynineblog/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/cynineblog/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Archives</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Hey, this is Archives.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/cynineblog/tags/#Swift" title="Swift">Swift</a>
+                        
+                          <a class="tag" href="/cynineblog/tags/#Almofire" title="Almofire">Almofire</a>
+                        
+                    </div>
+                    <h1>Alamofire教程:入门</h1>
+                    <h2 class="subheading">通过使用 Imagga API 上传和分析用户照片，带你进入Alamofire，这是一个在iOS上支持数千个应用程序的网络库。</h2>
+                    <span class="meta">
+                        Posted by cynine on
+                        2019-01-17
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 归档列表 -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-            
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-             <!-- 归档列表 -->
+                <blockquote>
+<p>作者: Ron Kliffer <a href="https://www.raywenderlich.com/35-alamofire-tutorial-getting-started" target="_blank" rel="noopener">原文链接</a></p>
+</blockquote>
+<ul>
+<li><strong>更新说明</strong>: Ron Kliffer 将本教程更新为 Xcode 9.3、iOS 11.3、Swift 4.1 和Alamofire 4.7.0。最初的教程是由 Aaron Douglas 编写的。</li>
+</ul>
+<p>Alamofire 是一个基于 Swift 的用于 iOS 和 macOS 的 HTTP 网络库。它在苹果的基础网络栈上提供了一个优雅的界面，简化了很多常见的网络任务。</p>
+<p>Alamofire 提供了可链接的请求/响应方法、JSON 参数和响应序列化、身份验证以及许多其他特性。</p>
+<p>在这个 Alamofire 教程中，你将使用 Alamofire 执行基本的网络任务，如上传文件和从第三方请求 API 数据。</p>
+<p>Alamofire 的优雅之处在于，它是用 Swift 从头开始编写的，没有从 Objective-C 对应的 AFNetworking 继承任何东西。</p>
+<p>你应该对 HTTP 网络有一个概念性的理解，并对 Apple 的网络类(如: <code>URLSession</code>)有一定的了解。</p>
+<p>虽然 Alamofire 确实掩盖了一些实现细节，但如果你需要对网络请求进行故障排除，最好了解一些背景知识。</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>点击下载<a href="https://koenig-media.raywenderlich.com/uploads/2018/04/PhotoTagger.zip" target="_blank" rel="noopener">本教程项目</a>。</p>
+<blockquote>
+<p><strong>注意</strong>: Alamofire 通常使用 CocoPods 集成，它已经在下载的项目中为你安装好了。</p>
+</blockquote>
+<p>这个 Alamofire 教程的应用程序名为 <strong>PhotoTagger</strong> 。完成后，它将允许从库中选择图形（如果你在真机上运行，则可以选择相册里的相片），除此之外，可以将图片上传到名为 <strong>Imagga</strong> 的第三方服务。服务器将执行一些图像识别任务，为图像提供标签和原色的列表:</p>
+<p><img src="https://koenig-media.raywenderlich.com/uploads/2015/11/PhotoTaggerDemo.gif" alt=""></p>
+<p>这个项目使用 CocoaPods, 所以使用 <strong>PhotoTagger.xcworkspace</strong> 打开它。</p>
+<blockquote>
+<p><strong>注意</strong>: 要了解更多关于 CocoPods 的知识，请查看 Joshua Greene 在网站上发布的<a href="http://www.raywenderlich.com/97014/use-cocoapods-with-swift" target="_blank" rel="noopener">本教程</a>。</p>
+</blockquote>
+<p>构建并运行项目。您将看到以下内容:</p>
+<p><img src="/cynineblog/2019/01/17/Almofire-tutorial/15477338366523.png" alt=""></p>
+<p>点击 <strong>Select Photo</strong> 选择一张图片，背景图像将被你选择的图像替换。</p>
+<p>打开 <strong>Main.storyboard</strong> 你会看到额外的屏幕显示标签和颜色已经添加给你。剩下的工作就是上传图像并获取标签和颜色。</p>
+<h2 id="The-Imagga-API"><a href="#The-Imagga-API" class="headerlink" title="The Imagga API"></a>The Imagga API</h2><p>Imagga 是一个图像识别平台即服务，它为开发人员和企业提供图像标记api来构建可伸缩的、图像密集型的云应用程序。你可以在这里试用他们的<a href="https://imagga.com/auto-tagging-demo?url=https://imagga.com/static/images/tagging/vegetables.jpg" target="_blank" rel="noopener">自动标签服务</a>。</p>
+<p>对于本 Alamofire 教程，你需要使用 Imagga 创建一个免费的开发人员帐户。Imagga 在每个 HTTP 请求中都需要一个授权头，这样只有拥有帐户的人才可以使用他们的服务。访问 <a href="https://imagga.com/auth/signup/hacker" target="_blank" rel="noopener">https://imagga.com/auth/signup/hacker</a> 并填写表单。创建帐户后，查看仪表板:</p>
+<p><img src="/cynineblog/2019/01/17/Almofire-tutorial/15477340296147.jpg" alt=""></p>
+<p>在授权部分下面列出的是你稍后将使用的秘密令牌。你需要将此信息作为头包含在每个HTTP请求中。</p>
+<blockquote>
+<p><strong>注意:</strong> 确保您复制了整个秘密令牌，确保向右滚动并验证您复制了所有内容。</p>
+</blockquote>
+<p>您将使用 Imagga 的内容端点来上传照片，为图像识别标记端点，为颜色识别标记端点。您可以在 <a href="http://docs.imagga.com" target="_blank" rel="noopener">http://docs.imagga.com</a> 上阅读关于 Imagga API 的所有信息。</p>
 
 
+                <hr>
 
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2019">
-                    <span class="tag-text">2019</span>
-                </span>
-                <ul>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    01-18
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2019/01/18/GCD知识总结/" style="color: #0085a1">
-                        <span>
-                            GCD知识总结
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    01-17
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2019/01/17/Almofire-tutorial/" style="color: #0085a1">
-                        <span>
-                            Alamofire教程:入门
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    01-17
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/" style="color: #0085a1">
-                        <span>
-                            Swift 4 Grand Central Dispatch (GCD) 教程:第 2/2 部分
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    01-17
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-1/" style="color: #0085a1">
-                        <span>
-                            Swift 4 Grand Central Dispatch (GCD) 教程:第 1/2 部分
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
                 
 
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/cynineblog/2019/01/18/GCD知识总结/" data-toggle="tooltip" data-placement="top" title="GCD知识总结">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/cynineblog/2019/01/17/swift4-gcd-tutoral-part-2/" data-toggle="tooltip" data-placement="top" title="Swift 4 Grand Central Dispatch (GCD) 教程:第 2/2 部分">Next Post &rarr;</a>
+                        </li>
+                    
                 </ul>
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2015">
-                    <span class="tag-text">2015</span>
-                </span>
-                <ul>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    07-09
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2015/07/09/js-module-7day/" style="color: #0085a1">
-                        <span>
-                            Example Post using Keynote Layout
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    04-14
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2015/04/14/unix-linux-note/" style="color: #0085a1">
-                        <span>
-                            Example Post With Default Header Image
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
+
                 
 
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/cynineblog/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/cynineblog/tags/#Swift" title="Swift">Swift</a>
+                        
+                          <a class="tag" href="/cynineblog/tags/#Almofire" title="Almofire">Almofire</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Foo</a></li>
+                    
+                        <li><a href="#" target="_blank">Bar</a></li>
+                    
+                        <li><a href="#" target="_blank">Example Friends</a></li>
+                    
+                        <li><a href="#" target="_blank">It helps SEO</a></li>
+                    
                 </ul>
+                
             </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2014">
-                    <span class="tag-text">2014</span>
-                </span>
-                <ul>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    09-22
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2014/09/22/js-version/" style="color: #0085a1">
-                        <span>
-                            Example Post
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    01-29
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2014/01/29/hello-2015/" style="color: #0085a1">
-                        <span>
-                            Welcome to Hux Blog
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-
-                </ul>
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2013">
-                    <span class="tag-text">2013</span>
-                </span>
-                <ul>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li>
-                    05-25
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/cynineblog/2013/05/25/js-module-loader/" style="color: #0085a1">
-                        <span>
-                            Example Post with Code Highlight
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-
-                </ul>
-            </div>
-            
-
 
         </div>
     </div>
-</div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "hexo-theme-huxblog";
+    var disqus_identifier = "https://cynine.github.io/cynineblog/2019/01/17/Almofire-tutorial/";
+    var disqus_url = "https://cynine.github.io/cynineblog/2019/01/17/Almofire-tutorial/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->
