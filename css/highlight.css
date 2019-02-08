@@ -5,8 +5,8 @@
   margin: 20px 0;
   padding: 15px;
   font-size: 14px;
-  color: #fff;
-  background: #4d4d4d;
+  color: #ccc;
+  background: #2d2d2d;
   line-height: $line-height-code-block;
 }
 /*pre, code { 
@@ -23,7 +23,7 @@
 }*/
 .post-container pre code {
   padding: 0;
-  color: #fff;
+  color: #ccc;
   background: none;
   text-shadow: none;
 }
@@ -44,7 +44,7 @@
 .post-container .highlight figcaption {
   zoom: 1;
   font-size: 1em;
-  color: #fff;
+  color: #ccc;
   line-height: 1em;
   margin-bottom: 1em;
 }
@@ -58,10 +58,10 @@
 }
 .post-container .highlight figcaption a {
   float: right;
-  color: #fff;
+  color: #ccc;
 }
 .post-container .highlight figcaption a:hover {
-  border-bottom-color: #fff;
+  border-bottom-color: #ccc;
 }
 .post-container .highlight .gutter pre {
   color: #666;
@@ -78,7 +78,7 @@
   border: none;
 }
 .post-container pre .comment {
-  color: #75715e;
+  color: #999;
 }
 .post-container pre .variable,
 .post-container pre .attribute,
@@ -92,7 +92,7 @@
 .post-container pre .css .id,
 .post-container pre .css .class,
 .post-container pre .css .pseudo {
-  color: #fd971f;
+  color: #f2777a;
 }
 .post-container pre .number,
 .post-container pre .preprocessor,
@@ -114,7 +114,7 @@
 .post-container pre .special,
 .post-container pre .number,
 .post-container pre .formula {
-  color: #e6db74;
+  color: #9c9;
 }
 .post-container pre .title,
 .post-container pre .css .hexcolor {
@@ -128,9 +128,9 @@
 .post-container pre .perl .sub,
 .post-container pre .javascript .title,
 .post-container pre .coffeescript .title {
-  color: #a6e22e;
+  color: #69c;
 }
 .post-container pre .keyword,
 .post-container pre .javascript .function {
-  color: #f92672;
+  color: #c9c;
 }
